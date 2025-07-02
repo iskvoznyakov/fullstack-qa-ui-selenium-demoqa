@@ -18,6 +18,10 @@ class BasePage:
         logger.info(f"Поиск элемента: {locator}")
         return self.wait.until(EC.visibility_of_element_located(locator), f"There's no element: {locator}")
 
+    def find_in_dom(self, locator):
+        logger.info(f"Поиск элемента в DOM без ожидания видимости: {locator}")
+        return self.driver.find_element(*locator)
+
     def click(self, locator):
         logger.info(f"Клик по элементу: {locator}")
         self.find(locator).click()
