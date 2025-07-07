@@ -43,3 +43,11 @@ class BasePage:
     def get_text(self, locator):
         logger.info(f"Получение текста из {locator}")
         return self.find(locator).text
+
+    def is_clickable(self, locator):
+        logger.info(f"Проверка кликабельности {locator}")
+        try:
+            self.wait.until(EC.element_to_be_clickable(locator))
+            return True
+        except TimeoutException:
+            return False
