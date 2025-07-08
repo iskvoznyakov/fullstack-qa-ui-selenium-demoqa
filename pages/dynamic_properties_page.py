@@ -18,9 +18,11 @@ class DynamicPropertiesPage(BasePage):
     def wait_until_button_enabled(self):
         return self.is_clickable(self.WILL_ENABLE_BUTTON)
 
+    @log_action
     def wait_until_visible(self):
         return self.is_visible(self.VISIBLE_AFTER_BUTTON)
 
+    @log_action
     def wait_until_color_changes(self):
         element = self.find(self.COLOR_CHANGE_BUTTON)
         color_before = element.value_of_css_property("color")
@@ -30,5 +32,6 @@ class DynamicPropertiesPage(BasePage):
         except TimeoutException:
             return False
 
+    @log_action
     def find_random_id_text(self):
         return "This text has random Id" == self.get_text(self.RANDOM_ID_TEXT)

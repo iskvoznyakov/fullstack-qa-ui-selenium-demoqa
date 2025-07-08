@@ -41,9 +41,5 @@ class LinksPage(BasePage):
 
     @log_action
     def new_tab_is_opened(self):
-        original_window = self.driver.current_window_handle
-        for window_handle in self.driver.window_handles:
-            if window_handle != original_window:
-                self.driver.switch_to.window(window_handle)
-                break
+        self.switch_to_new_window()
         return self.driver.current_url.startswith("https://demoqa.com/")

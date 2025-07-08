@@ -8,18 +8,18 @@ def test_button_enabled_after_5_sec(driver):
 
 
 def test_color_change(driver):
-    page = DynamicPropertiesPage(driver)
-    page.open()
-    assert page.wait_until_color_changes(), "Цвет кнопки не изменился"
+    dynamic_properties_page = DynamicPropertiesPage(driver)
+    dynamic_properties_page.open()
+    assert dynamic_properties_page.wait_until_color_changes(), "Цвет кнопки не изменился"
 
 
 def test_button_becomes_visible(driver):
-    page = DynamicPropertiesPage(driver)
-    page.open()
-    assert page.wait_until_visible(), "Кнопка не появилась"
+    dynamic_properties_page = DynamicPropertiesPage(driver)
+    dynamic_properties_page.open()
+    assert dynamic_properties_page.wait_until_visible(), "Кнопка не появилась"
 
 
 def test_find_random_id_text(driver):
-    page = DynamicPropertiesPage(driver)
-    page.open()
-    assert page.find_random_id_text(), "Текст с рандомным ID не найден"
+    dynamic_properties_page = DynamicPropertiesPage(driver)
+    dynamic_properties_page.open()
+    assert dynamic_properties_page.find_random_id_text(), "Текст с рандомным ID не найден"
