@@ -51,3 +51,10 @@ class BasePage:
             return True
         except TimeoutException:
             return False
+
+    def switch_to_new_window(self):
+        original = self.driver.current_window_handle
+        for handle in self.driver.window_handles:
+            if handle != original:
+                self.driver.switch_to.window(handle)
+                return
