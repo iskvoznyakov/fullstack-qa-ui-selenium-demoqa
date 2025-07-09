@@ -1,4 +1,4 @@
-from selenium.common import TimeoutException
+from selenium.common import TimeoutException, NoAlertPresentException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -58,3 +58,34 @@ class BasePage:
             if handle != original:
                 self.driver.switch_to.window(handle)
                 return
+
+    def get_alert(self):
+        try:
+            self.wait.until(EC.alert_is_present())
+            return self.driver.switch_to.alert
+        except (NoAlertPresentException, TimeoutException):
+            return None
+
+    def alert_text(self):
+        alert = self.get_alert()
+        if alert:
+            return alert.text
+
+    def alert_accept(self):
+        alert = self.get_alert()
+        if not alert:
+            raise AssertionError("Ожидался alert, но он не появился")
+        alert.accept()
+
+    def alert_dismiss(self):
+        alert = self.get_alert()
+        if not alert:
+            raise AssertionError("Ожидался alert, но он не появился")
+        alert.dismiss()
+
+    def alert_send_keys(self, text):
+        alert = self.get_alert()
+        if not alert:
+            raise AssertionError("Ожидался alert, но он не появился")
+        alert.send_keys(text)
+        alert.accept()
