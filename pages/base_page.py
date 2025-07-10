@@ -40,6 +40,14 @@ class BasePage:
         except TimeoutException:
             return False
 
+    def is_not_visible(self, locator):
+        logger.info(f"Проверка отсутствия видимости {locator}")
+        try:
+            self.wait.until(EC.invisibility_of_element_located(locator))
+            return True
+        except TimeoutException:
+            return False
+
     def get_text(self, locator):
         logger.info(f"Получение текста из {locator}")
         return self.find(locator).text
