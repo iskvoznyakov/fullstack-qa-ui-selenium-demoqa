@@ -65,8 +65,7 @@ class DatePickerPage(BasePage):
         self.click((By.CLASS_NAME, "react-datepicker__month-read-view"))
         self.click((By.XPATH, f"//div[@class='react-datepicker__month-dropdown']//div[text()='{month}']"))
 
-        self.click((By.CLASS_NAME, "react-datepicker__year-read-view"))
-        self.click((By.XPATH, f"//div[@class='react-datepicker__year-dropdown']//div[text()='{year}']"))
+        self.select_year(year)
 
         formatted_day = f"{int(day):03d}"
         self.click((
@@ -76,18 +75,11 @@ class DatePickerPage(BasePage):
 
         self.click((By.XPATH, f"//li[contains(@class, 'react-datepicker__time-list-item') and text()='{time}']"))
 
-    # TODO Добавить возможность выбирать любой год
-    #  (на данный момент есть возможность работать только с годами, которые видны в выпадающем списке)
-    # def select_year(self, target_year: str, max_attempts=25):
-    #    self.click((By.CLASS_NAME, "react-datepicker__year-read-view"))
-    #    attempts = 0
-    #    while attempts < max_attempts:
-    #        try:
-    #            self.click((By.XPATH, f"//div[@class='react-datepicker__year-option' and text()='{target_year}']"))
-    #            break
-    #        except:
-    #            self.click((By.CLASS_NAME, "react-datepicker__navigation--years-previous"))
-    #            time.sleep(0.5)
-    #            attempts += 1
-    #    else:
-    #        raise Exception(f"Year {target_year} not found after {max_attempts} attempts")
+    def select_year(self, target_year: str):
+        self.click((By.CLASS_NAME, "react-datepicker__year-read-view"))
+        while True:
+            try:
+                self.quick_click((By.XPATH, f"//div[text()='{target_year}']"), timeout=0.5)
+                break
+            except:
+                self.quick_click((By.CSS_SELECTOR, ".react-datepicker__navigation--years-previous"))
