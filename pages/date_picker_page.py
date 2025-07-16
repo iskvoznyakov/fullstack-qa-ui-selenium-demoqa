@@ -65,7 +65,9 @@ class DatePickerPage(BasePage):
         self.click((By.CLASS_NAME, "react-datepicker__month-read-view"))
         self.click((By.XPATH, f"//div[@class='react-datepicker__month-dropdown']//div[text()='{month}']"))
 
+
         self.select_year(year)
+
 
         formatted_day = f"{int(day):03d}"
         self.click((
@@ -74,6 +76,7 @@ class DatePickerPage(BasePage):
         ))
 
         self.click((By.XPATH, f"//li[contains(@class, 'react-datepicker__time-list-item') and text()='{time}']"))
+
 
     def select_year(self, target_year: str):
         self.click((By.CLASS_NAME, "react-datepicker__year-read-view"))
