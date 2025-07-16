@@ -25,5 +25,5 @@ def test_choose_date(driver):
 def test_choose_date_time(driver):
     page = DatePickerPage(driver)
     page.open()
-    page.choose_date_time(year="2020", month="February", day="4", time="17:00")
-    assert page.get_datetime_value() == "February 4, 2020 5:00 PM"
+    page.choose_date_time(year="1996", month="February", day="4", time="17:00")
+    assert page.get_datetime_value() == "February 4, 1996 5:00 PM"

@@ -97,3 +97,12 @@ class BasePage:
             raise AssertionError("Ожидался alert, но он не появился")
         alert.send_keys(text)
         alert.accept()
+
+    def quick_find(self, locator, timeout=0.5):
+        logger.info(f"Быстрый поиск элемента: {locator}")
+        short_wait = WebDriverWait(self.driver, timeout, poll_frequency=0.1)
+        return short_wait.until(EC.presence_of_element_located(locator))
+
+    def quick_click(self, locator, timeout=0.5):
+        logger.info(f"Быстрый клик по элементу: {locator}")
+        self.quick_find(locator, timeout).click()
