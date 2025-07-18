@@ -1,11 +1,7 @@
-import time
-
-from selenium.webdriver import ActionChains, Keys
 from selenium.webdriver.common.by import By
 from config import BASE_URL
 from pages.base_page import BasePage
 from utils.decorators import log_action
-from utils.logger import logger
 
 
 class SliderPage(BasePage):
