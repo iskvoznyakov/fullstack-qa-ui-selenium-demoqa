@@ -44,3 +44,7 @@ class ProgressBarPage(BasePage):
         except TimeoutException:
             current = self.get_progress_value()
             raise TimeoutException(f"Не удалось дождаться {value}%. Текущее значение: {current}%")
+
+    @log_action
+    def reset_progress(self):
+        self.driver.find_element(*self.RESET_BUTTON).click()
