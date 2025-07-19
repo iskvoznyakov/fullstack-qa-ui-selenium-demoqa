@@ -11,7 +11,6 @@ def test_progress_bar_partial_stop(driver, value):
     current_value = int(progress_bar_page.get_progress_value())
     assert current_value >= value, f"Expected progress >= {value}%, but got {current_value}%"
 
-
 def test_progress_bar_full_reset(driver):
     progress_bar_page = ProgressBarPage(driver)
     progress_bar_page.open()
