@@ -20,8 +20,19 @@ class DroppablePage(BasePage):
 
     DROPPABLE_ELEMENTS_IN_TABS = {
         "simple_tab": (By.XPATH, "//div[@id='simpleDropContainer']//div[@id='droppable']"),
-        "accept_tab": (By.XPATH, "//div[@id='acceptDropContainer']//div[@id='droppable']")
+        "accept_tab": (By.XPATH, "//div[@id='acceptDropContainer']//div[@id='droppable']"),
+        "prevent_propogation_tab": {
+            "greedy_zone": {
+                "GREEDY_OUT_DROP_BOX": (By.ID, "greedyDropBox"),
+                "GREEDY_INNER_DROP_BOX": (By.ID, "greedyDropBoxInner")},
+            "not_greedy_zone": {
+                "NOT_GREEDY_OUT_DROP_BOX": (By.ID, "notGreedyDropBox"),
+                "NOT_GREEDY_INNER_DROP_BOX": (By.ID, "notGreedyInnerDropBox")},
+        }
     }
+
+    DRAGGABLE_ELEMENT_ON_PREVENT_TAB = (
+    By.XPATH, "//div[@id='droppableExample-tabpane-preventPropogation']//div[@id='dragBox']")
 
     def open(self):
         super().open(BASE_URL + "/droppable")
@@ -59,3 +70,49 @@ class DroppablePage(BasePage):
     def is_droppable_element_active(self, tab_name):
         droppable_element = self.find(self.DROPPABLE_ELEMENTS_IN_TABS[tab_name])
         return "highlight" in droppable_element.get_attribute("class")
+
+    @log_action
+    def move_element_to_inner_box_on_prevent_tab(self, zone_name):
+        draggable_element = self.find(self.DRAGGABLE_ELEMENT_ON_PREVENT_TAB)
+        if zone_name == 'greedy_zone':
+            outer_droppable = self.find(
+                self.DROPPABLE_ELEMENTS_IN_TABS["prevent_propogation_tab"][zone_name]["GREEDY_OUT_DROP_BOX"])
+            inner_droppable = self.find(
+                self.DROPPABLE_ELEMENTS_IN_TABS["prevent_propogation_tab"][zone_name]["GREEDY_INNER_DROP_BOX"])
+        elif zone_name == 'not_greedy_zone':
+            outer_droppable = self.find(
+                self.DROPPABLE_ELEMENTS_IN_TABS["prevent_propogation_tab"][zone_name]["NOT_GREEDY_OUT_DROP_BOX"])
+            inner_droppable = self.find(
+                self.DROPPABLE_ELEMENTS_IN_TABS["prevent_propogation_tab"][zone_name]["NOT_GREEDY_INNER_DROP_BOX"])
+        else:
+            raise ValueError("Некорректное название зоны элемента")
+
+        (ActionChains(self.driver).
+         click_and_hold(draggable_element).
+         move_to_element(inner_droppable).
+         release().
+         perform())
+
+    @log_action
+    def is_outer_element_active(self, zone_name):
+        if zone_name == 'greedy_zone':
+            outer_droppable = self.find(
+                self.DROPPABLE_ELEMENTS_IN_TABS["prevent_propogation_tab"][zone_name]["GREEDY_OUT_DROP_BOX"])
+        elif zone_name == 'not_greedy_zone':
+            outer_droppable = self.find(
+                self.DROPPABLE_ELEMENTS_IN_TABS["prevent_propogation_tab"][zone_name]["NOT_GREEDY_OUT_DROP_BOX"])
+        else:
+            raise ValueError("Некорректное название зоны элемента")
+        return "highlight" in outer_droppable.get_attribute("class")
+
+    @log_action
+    def is_inner_element_active(self, zone_name):
+        if zone_name == 'greedy_zone':
+            inner_droppable = self.find(
+                self.DROPPABLE_ELEMENTS_IN_TABS["prevent_propogation_tab"][zone_name]["GREEDY_INNER_DROP_BOX"])
+        elif zone_name == 'not_greedy_zone':
+            inner_droppable = self.find(
+                self.DROPPABLE_ELEMENTS_IN_TABS["prevent_propogation_tab"][zone_name]["NOT_GREEDY_INNER_DROP_BOX"])
+        else:
+            raise ValueError("Некорректное название зоны элемента")
+        return "highlight" in inner_droppable.get_attribute("class")
