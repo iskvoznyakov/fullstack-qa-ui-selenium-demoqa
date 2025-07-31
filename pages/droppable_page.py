@@ -28,11 +28,17 @@ class DroppablePage(BasePage):
             "not_greedy_zone": {
                 "NOT_GREEDY_OUT_DROP_BOX": (By.ID, "notGreedyDropBox"),
                 "NOT_GREEDY_INNER_DROP_BOX": (By.ID, "notGreedyInnerDropBox")},
-        }
+        },
+        "revert_tab": (By.XPATH, "//div[@id='revertableDropContainer']//div[@id='droppable']")
     }
 
     DRAGGABLE_ELEMENT_ON_PREVENT_TAB = (
-    By.XPATH, "//div[@id='droppableExample-tabpane-preventPropogation']//div[@id='dragBox']")
+        By.XPATH, "//div[@id='droppableExample-tabpane-preventPropogation']//div[@id='dragBox']")
+
+    DRAGGABLE_ELEMENTS_ON_REVERT_TAB = {
+        "revertable": (By.ID, "revertable"),
+        "not_revertable": (By.ID, "notRevertable")
+    }
 
     def open(self):
         super().open(BASE_URL + "/droppable")
@@ -75,13 +81,9 @@ class DroppablePage(BasePage):
     def move_element_to_inner_box_on_prevent_tab(self, zone_name):
         draggable_element = self.find(self.DRAGGABLE_ELEMENT_ON_PREVENT_TAB)
         if zone_name == 'greedy_zone':
-            outer_droppable = self.find(
-                self.DROPPABLE_ELEMENTS_IN_TABS["prevent_propogation_tab"][zone_name]["GREEDY_OUT_DROP_BOX"])
             inner_droppable = self.find(
                 self.DROPPABLE_ELEMENTS_IN_TABS["prevent_propogation_tab"][zone_name]["GREEDY_INNER_DROP_BOX"])
         elif zone_name == 'not_greedy_zone':
-            outer_droppable = self.find(
-                self.DROPPABLE_ELEMENTS_IN_TABS["prevent_propogation_tab"][zone_name]["NOT_GREEDY_OUT_DROP_BOX"])
             inner_droppable = self.find(
                 self.DROPPABLE_ELEMENTS_IN_TABS["prevent_propogation_tab"][zone_name]["NOT_GREEDY_INNER_DROP_BOX"])
         else:
@@ -116,3 +118,27 @@ class DroppablePage(BasePage):
         else:
             raise ValueError("Некорректное название зоны элемента")
         return "highlight" in inner_droppable.get_attribute("class")
+
+    @log_action
+    def _move_revertable_element(self, element_name):
+        draggable_element = self.find(self.DRAGGABLE_ELEMENTS_ON_REVERT_TAB[element_name])
+        droppable_element = self.find(self.DROPPABLE_ELEMENTS_IN_TABS["revert_tab"])
+        (ActionChains(self.driver).
+         click_and_hold(draggable_element).
+         move_to_element(droppable_element).
+         release().
+         perform())
+
+    @log_action
+    def has_element_moved_back(self, element_name, timeout=2):
+        element = self.find(self.DRAGGABLE_ELEMENTS_ON_REVERT_TAB[element_name])
+        start_location = element.location
+
+        self._move_revertable_element(element_name)
+
+        try:
+            self.wait.until(
+                lambda d: self.find(self.DRAGGABLE_ELEMENTS_ON_REVERT_TAB[element_name]).location == start_location)
+            return True
+        except:
+            return False

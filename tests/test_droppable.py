@@ -1,3 +1,4 @@
+import pytest
 from pages.droppable_page import DroppablePage
 
 
@@ -41,3 +42,19 @@ def test_move_element_to_not_greedy_zone_on_prevent_propogation_tab(driver):
     droppable_page.move_element_to_inner_box_on_prevent_tab("not_greedy_zone")
     assert droppable_page.is_inner_element_active("not_greedy_zone"), "Внутренний элемент не активен"
     assert droppable_page.is_outer_element_active("not_greedy_zone"), "Внешний элемент активен"
+
+
+@pytest.mark.parametrize("element_name, should_revert", [
+    ("revertable", True),
+    ("not_revertable", False)
+])
+def test_element_revert_behavior(driver, element_name, should_revert):
+    droppable_page = DroppablePage(driver)
+    droppable_page.open()
+    droppable_page.click_on_tab("revert_draggable_tab")
+
+    is_back = droppable_page.has_element_moved_back(element_name)
+
+    assert is_back == should_revert, (
+        f"Элемент '{element_name}' должен{'' if should_revert else ' не'} возвращаться после отпускания."
+    )
