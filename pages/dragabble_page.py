@@ -8,13 +8,21 @@ from selenium.webdriver import ActionChains
 class DragabblePage(BasePage):
     TABS = {
         "simple_tab": (By.ID, "draggableExample-tab-simple"),
-        "axis_restricted_tab": (By.ID, "draggableExample-tab-axisRestriction")
+        "axis_restricted_tab": (By.ID, "draggableExample-tab-axisRestriction"),
+        "container_restricted_tab": (By.ID, "draggableExample-tab-containerRestriction")
     }
 
     DRAGGABLE_ELEMENTS = {
         "drag_me_element": (By.ID, "dragBox"),
         "only_x_element": (By.ID, "restrictedX"),
         "only_y_element": (By.ID, "restrictedY"),
+        "within_box_element": (By.CSS_SELECTOR, "#containmentWrapper .draggable"),
+        "within_parent_element": (By.CSS_SELECTOR, ".draggable .ui-draggable")
+    }
+
+    CONTAINERS = {
+        "wrapper_box": (By.ID, "containmentWrapper"),
+        "parent_box": (By.CSS_SELECTOR, ".draggable.ui-widget-content.m-3")
     }
 
     def open(self):
@@ -36,3 +44,27 @@ class DragabblePage(BasePage):
         element = self.find(self.DRAGGABLE_ELEMENTS[element_name])
         location = element.location
         return location['x'], location['y']
+
+    @log_action
+    def get_element_rect(self, element_name):
+        element = self.find(self.DRAGGABLE_ELEMENTS[element_name])
+        location = element.location
+        size = element.size
+        return {
+            "x": location["x"],
+            "y": location["y"],
+            "width": size["width"],
+            "height": size["height"]
+        }
+
+    @log_action
+    def get_container_rect(self, container_name):
+        element = self.find(self.CONTAINERS[container_name])
+        location = element.location
+        size = element.size
+        return {
+            "x": location["x"],
+            "y": location["y"],
+            "width": size["width"],
+            "height": size["height"]
+        }
