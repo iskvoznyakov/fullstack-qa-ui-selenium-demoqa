@@ -9,7 +9,8 @@ class DragabblePage(BasePage):
     TABS = {
         "simple_tab": (By.ID, "draggableExample-tab-simple"),
         "axis_restricted_tab": (By.ID, "draggableExample-tab-axisRestriction"),
-        "container_restricted_tab": (By.ID, "draggableExample-tab-containerRestriction")
+        "container_restricted_tab": (By.ID, "draggableExample-tab-containerRestriction"),
+        "cursor_style_tab": (By.ID, "draggableExample-tab-cursorStyle")
     }
 
     DRAGGABLE_ELEMENTS = {
@@ -17,7 +18,10 @@ class DragabblePage(BasePage):
         "only_x_element": (By.ID, "restrictedX"),
         "only_y_element": (By.ID, "restrictedY"),
         "within_box_element": (By.CSS_SELECTOR, "#containmentWrapper .draggable"),
-        "within_parent_element": (By.CSS_SELECTOR, ".draggable .ui-draggable")
+        "within_parent_element": (By.CSS_SELECTOR, ".draggable .ui-draggable"),
+        "center_cursor": (By.ID, "cursorCenter"),
+        "top_left_cursor": (By.ID, "cursorTopLeft"),
+        "bottom_cursor": (By.ID, "cursorBottom")
     }
 
     CONTAINERS = {
