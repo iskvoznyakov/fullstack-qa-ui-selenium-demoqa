@@ -61,3 +61,15 @@ def test_drag_within_parent_container(driver):
         "Правая граница элемента (parent) вышла за пределы родительского контейнера"
     assert box["y"] + box["height"] <= container["y"] + container["height"], \
         "Нижняя граница элемента (parent) вышла за пределы родительского контейнера"
+
+
+def test_drag_elements_with_cursor_styles(driver):
+    dragabble_page = DragabblePage(driver)
+    dragabble_page.open()
+    dragabble_page.click_on_tab("cursor_style_tab")
+    for element in ["center_cursor", "top_left_cursor", "bottom_cursor"]:
+        start = dragabble_page.get_element_position(element)
+        dragabble_page.drag_element_by_offset(element, 50, 50)
+        end = dragabble_page.get_element_position(element)
+
+        assert end != start, f"Элемент {element} не был перемещён на вкладке Cursor Style"
