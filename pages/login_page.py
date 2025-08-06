@@ -10,6 +10,7 @@ class LoginPage(BasePage):
     PASSWORD_FIELD = (By.ID, "password")
     LOGIN_BUTTON = (By.ID, "login")
     LOGOUT_BUTTON = (By.ID, "submit")
+    INVALID_FIELD_ERROR = (By.ID, "name")
 
     def open(self):
         super().open(BASE_URL + "/login")
@@ -24,3 +25,18 @@ class LoginPage(BasePage):
     def is_login_successful(self):
         self.wait.until(EC.visibility_of_element_located(self.LOGOUT_BUTTON))
         return "profile" in self.driver.current_url
+
+    @log_action
+    def is_required_error_displayed(self, username, password):
+        if username == "":
+            elem = self.find(self.USERNAME_FIELD)
+        elif password == "":
+            elem = self.find(self.PASSWORD_FIELD)
+        else:
+            raise ValueError("Некорректное название поля")
+        return "is-invalid" in elem.get_attribute("class")
+
+    @log_action
+    def is_invalid_error_displayed(self):
+        elem = self.wait.until(EC.visibility_of_element_located(self.INVALID_FIELD_ERROR))
+        return "Invalid username or password!" in elem.text
