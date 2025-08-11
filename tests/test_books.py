@@ -1,5 +1,4 @@
 import pytest
-
 from pages.books_page import BooksPage
 
 
@@ -26,3 +25,16 @@ def test_page_books(driver, number_of_books):
     books_found = books_page.find_result()
     assert len(
         books_found) == number_of_books, f"На странице отображается не {number_of_books} книг, а {len(books_found)}"
+
+
+def test_sort_books_by_author_name(driver):
+    books_page = BooksPage(driver)
+    books_page.open()
+
+    books_page.click_on_column_name_author()
+    authors_list_asc = books_page.get_authors_list()
+    assert authors_list_asc == sorted(authors_list_asc), "Данные не отсортированы по авторам по возрастанию"
+
+    books_page.click_on_column_name_author()
+    authors_list_desc = books_page.get_authors_list()
+    assert authors_list_desc == sorted(authors_list_desc, reverse=True), "Данные не отсортированы по авторам по убыванию"
